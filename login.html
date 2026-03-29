@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechBlog - Login</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- fontes -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- icones bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <style>
+    /* === variaveis (mesmas do index pra ficar consistente) === */
+    :root {
+      --roxo: #7c3aed;
+      --roxo-claro: #a78bfa;
+      --verde: #10b981;
+      --amarelo: #fbbf24;
+      --rosa: #f43f5e;
+      --fundo: #0f0f1a;
+      --fundo2: #1a1a2e;
+      --card-bg: #1e1e35;
+      --texto: #e2e8f0;
+      --texto-fraco: #94a3b8;
+      --branco: #ffffff;
+      --erro: #ef4444;
+      --sucesso: #10b981;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--fundo);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    /* =====================
+       LAYOUT PRINCIPAL
+    ===================== */
+    .pagina-login {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ==============================
+       PAINEL ESQUERDO (decorativo)
+    ============================== */
+    .lado-esquerdo {
+      flex: 0 0 50%;
+      background: var(--fundo2);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 48px;
+    }
+
+    /* fundo com gradiente animado */
+    .lado-esquerdo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(124,58,237,0.2) 0%, transparent 55%),
+        radial-gradient(ellipse at 70% 70%, rgba(16,185,129,0.12) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* grade pontilhada igual ao index */
+    .lado-esquerdo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,58,237,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* logo no canto */
+    .logo-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-link span {
+      background: linear-gradient(90deg, var(--roxo-claro), var(--verde));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* conteudo central do lado esquerdo */
+    .esquerdo-centro {
+      position: relative;
+      z-index: 1;
+    }
+
+    .esquerdo-tag {
+      display: inline-block;
+      background: rgba(124,58,237,0.2);
+      border: 1px solid rgba(124,58,237,0.4);
+      color: var(--roxo-claro);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .esquerdo-titulo {
+      font-size: 2.8rem;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+
+    .esquerdo-titulo span {
+      background: linear-gradient(135deg, var(--roxo-claro), var(--verde));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .esquerdo-desc {
+      font-size: 0.88rem;
+      color: var(--texto-fraco);
+      line-height: 1.7;
+      max-width: 360px;
+    }
+
+    /* cards de beneficios */
+    .beneficios {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .beneficio-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: var(--texto-fraco);
+    }
+
+    .beneficio-icone {
+      width: 32px;
+      height: 32px;
+      background: rgba(124,58,237,0.15);
+      border: 1px solid rgba(124,58,237,0.25);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--roxo-claro);
+      flex-shrink: 0;
+    }
+
+    /* rodape do lado esquerdo */
+    .esquerdo-rodape {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 28px;
+    }
+
+    .mini-stat .num {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--verde);
+    }
+
+    .mini-stat .label {
+      font-size: 0.68rem;
+      color: var(--texto-fraco);
+      margin-top: 2px;
+    }
+
+    /* ==============================
+       PAINEL DIREITO (formulario)
+    ============================== */
+    .lado-direito {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 40px;
+      background: var(--fundo);
+      position: relative;
+    }
+
+    /* link de voltar */
+    .voltar-link {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--texto-fraco);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .voltar-link:hover { color: var(--roxo-claro); }
+
+    .caixa-form {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* abas de login / cadastro */
+    .abas {
+      display: flex;
+      gap: 4px;
+      background: var(--card-bg);
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 32px;
+    }
+
+    .aba {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--texto-fraco);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 10px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .aba.ativa {
+      background: var(--roxo);
+      color: white;
+    }
+
+    /* titulo do formulario */
+    .form-titulo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .form-subtitulo {
+      font-size: 0.82rem;
+      color: var(--texto-fraco);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* campo de input */
+    .campo {
+      margin-bottom: 18px;
+    }
+
+    .campo label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--texto-fraco);
+      margin-bottom: 8px;
+    }
+
+    /* wrapper pra botar icone dentro do input */
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 12px 40px 12px 14px;
+      color: var(--texto);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-wrap input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .input-wrap input:focus {
+      border-color: var(--roxo);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+    }
+
+    /* borda vermelha se tiver erro */
+    .input-wrap input.com-erro {
+      border-color: var(--erro);
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.15);
+    }
+
+    /* borda verde se tiver ok */
+    .input-wrap input.ok {
+      border-color: var(--sucesso);
+    }
+
+    /* icone dentro do input */
+    .icone-input {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--texto-fraco);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .icone-input:hover { color: var(--roxo-claro); }
+
+    /* mensagem de erro embaixo do campo */
+    .msg-erro {
+      font-size: 0.72rem;
+      color: var(--erro);
+      margin-top: 5px;
+      display: none; /* some por padrao */
+    }
+
+    .msg-erro.mostrar { display: block; }
+
+    /* linha de opcoes (lembrar / esqueci) */
+    .opcoes-form {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    /* checkbox customizado */
+    .check-custom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .check-custom input[type="checkbox"] { display: none; }
+
+    .check-caixa {
+      width: 18px;
+      height: 18px;
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .check-custom input:checked + .check-caixa {
+      background: var(--roxo);
+      border-color: var(--roxo);
+    }
+
+    .check-custom input:checked + .check-caixa::after {
+      content: '✓';
+      font-size: 0.65rem;
+      color: white;
+      font-weight: 900;
+    }
+
+    .check-custom span:last-child {
+      font-size: 0.8rem;
+      color: var(--texto-fraco);
+    }
+
+    .link-esqueci {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--roxo-claro);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .link-esqueci:hover { color: var(--roxo-claro); text-decoration: underline; }
+
+    /* botao de submit */
+    .btn-enviar {
+      width: 100%;
+      background: var(--roxo);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 800;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-enviar:hover {
+      background: #6d28d9;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(124,58,237,0.4);
+    }
+
+    /* spinner de carregamento dentro do botao */
+    .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: girar 0.6s linear infinite;
+    }
+
+    .btn-enviar.carregando .texto-btn { display: none; }
+    .btn-enviar.carregando .spinner { display: block; }
+
+    @keyframes girar { to { transform: rotate(360deg); } }
+
+    /* divisor "ou" */
+    .ou {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      font-size: 0.75rem;
+      color: var(--texto-fraco);
+      font-weight: 600;
+    }
+
+    .ou::before,
+    .ou::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* botoes de login social */
+    .btns-social {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .btn-social {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      color: var(--texto);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-social:hover {
+      border-color: var(--roxo);
+      background: rgba(124,58,237,0.08);
+    }
+
+    /* texto de rodape do form */
+    .form-rodape {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--texto-fraco);
+    }
+
+    .form-rodape a {
+      color: var(--roxo-claro);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .form-rodape a:hover { text-decoration: underline; }
+
+    /* paineis de formulario (login e cadastro) */
+    .painel-form { display: none; }
+    .painel-form.ativo { display: block; }
+
+    /* medidor de forca da senha */
+    .forca-senha {
+      margin-top: 8px;
+    }
+
+    .barra-forca {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .fill-forca {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .label-forca {
+      font-size: 0.65rem;
+      font-weight: 700;
+      margin-top: 4px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* tela de sucesso */
+    .tela-sucesso {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .tela-sucesso.mostrar { display: block; }
+
+    .icone-sucesso {
+      width: 70px;
+      height: 70px;
+      background: rgba(16,185,129,0.1);
+      border: 2px solid var(--sucesso);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 1.8rem;
+      color: var(--sucesso);
+      animation: aparecer-pop 0.5s ease;
+    }
+
+    @keyframes aparecer-pop {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .sucesso-titulo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .sucesso-titulo span { color: var(--verde); }
+
+    .sucesso-msg {
+      font-size: 0.85rem;
+      color: var(--texto-fraco);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* =====================
+       TOAST
+    ===================== */
+    .toast-pop {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--card-bg);
+      border-left: 3px solid var(--verde);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      z-index: 9000;
+      transform: translateX(120%);
+      transition: transform 0.3s;
+      pointer-events: none;
+      max-width: 280px;
+    }
+
+    .toast-pop.visivel { transform: translateX(0); }
+
+    /* =====================
+       RESPONSIVIDADE
+    ===================== */
+
+    /* tablet - esconde o lado esquerdo */
+    @media (max-width: 900px) {
+      .lado-esquerdo {
+        display: none;
+      }
+      .lado-direito {
+        width: 100%;
+      }
+    }
+
+    /* celular */
+    @media (max-width: 480px) {
+      .lado-direito { padding: 50px 20px; }
+      .caixa-form { max-width: 100%; }
+      .btns-social { flex-direction: column; }
+      .voltar-link { top: 20px; left: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="pagina-login">
+
+    <!-- ==============================
+         LADO ESQUERDO (decorativo)
+    ============================== -->
+    <div class="lado-esquerdo">
+
+      <!-- logo -->
+      <a href="index.html" class="logo-link">Tech<span>Blog</span></a>
+
+      <!-- conteudo central -->
+      <div class="esquerdo-centro">
+        <span class="esquerdo-tag">👋 Bem-vindo de volta!</span>
+        <h2 class="esquerdo-titulo">
+          Sua conta,<br>
+          seu <span>espaço</span>
+        </h2>
+        <p class="esquerdo-desc">
+          Entre pra acessar seus posts salvos, comentários e conteúdo exclusivo da comunidade!
+        </p>
+
+        <!-- lista de beneficios -->
+        <div class="beneficios">
+          <div class="beneficio-item">
+            <div class="beneficio-icone"><i class="bi bi-bookmark-heart"></i></div>
+            Salve posts pra ler depois
+          </div>
+          <div class="beneficio-item">
+            <div class="beneficio-icone"><i class="bi bi-chat-dots"></i></div>
+            Comente e interaja com a comunidade
+          </div>
+          <div class="beneficio-item">
+            <div class="beneficio-icone"><i class="bi bi-bell"></i></div>
+            Receba notificações de novos conteúdos
+          </div>
+          <div class="beneficio-item">
+            <div class="beneficio-icone"><i class="bi bi-trophy"></i></div>
+            Ganhe badges por participação
+          </div>
+        </div>
+      </div>
+
+      <!-- estatisticas no rodape -->
+      <div class="esquerdo-rodape">
+        <div class="mini-stat">
+          <div class="num">4.8k</div>
+          <div class="label">Membros</div>
+        </div>
+        <div class="mini-stat">
+          <div class="num">120+</div>
+          <div class="label">Artigos</div>
+        </div>
+        <div class="mini-stat">
+          <div class="num">100%</div>
+          <div class="label">Gratuito</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==============================
+         LADO DIREITO (formulario)
+    ============================== -->
+    <div class="lado-direito">
+
+      <!-- link de voltar pro inicio -->
+      <a href="index.html" class="voltar-link">
+        <i class="bi bi-arrow-left"></i> Voltar
+      </a>
+
+      <div class="caixa-form">
+
+        <!-- abas de login e cadastro -->
+        <div class="abas">
+          <button class="aba ativa" data-aba="login">Entrar</button>
+          <button class="aba" data-aba="cadastro">Criar Conta</button>
+        </div>
+
+        <!-- ===========================
+             PAINEL DE LOGIN
+        =========================== -->
+        <div class="painel-form ativo" id="painel-login">
+
+          <!-- formulario normal de login -->
+          <div id="form-login-wrap">
+            <h1 class="form-titulo">Olá de novo! 👋</h1>
+            <p class="form-subtitulo">Entre com seu e-mail e senha pra continuar.</p>
+
+            <form id="formLogin" novalidate>
+
+              <div class="campo">
+                <label for="email-login">E-mail</label>
+                <div class="input-wrap">
+                  <input type="email" id="email-login" placeholder="seu@email.com" autocomplete="email" />
+                  <i class="bi bi-envelope icone-input"></i>
+                </div>
+                <div class="msg-erro" id="erro-email-login">Coloca um e-mail válido aí 😅</div>
+              </div>
+
+              <div class="campo">
+                <label for="senha-login">Senha</label>
+                <div class="input-wrap">
+                  <input type="password" id="senha-login" placeholder="••••••••" autocomplete="current-password" />
+                  <i class="bi bi-eye icone-input" id="toggle-senha-login"></i>
+                </div>
+                <div class="msg-erro" id="erro-senha-login">Esqueceu a senha? Digita alguma coisa 😅</div>
+              </div>
+
+              <div class="opcoes-form">
+                <label class="check-custom">
+                  <input type="checkbox" id="lembrar" />
+                  <div class="check-caixa"></div>
+                  <span>Lembrar de mim</span>
+                </label>
+                <a href="#" class="link-esqueci" id="link-esqueci">Esqueci minha senha</a>
+              </div>
+
+              <button type="submit" class="btn-enviar">
+                <span class="texto-btn">Entrar 🚀</span>
+                <div class="spinner"></div>
+              </button>
+
+            </form>
+
+            <div class="ou">ou entre com</div>
+
+            <div class="btns-social">
+              <button class="btn-social">
+                <i class="bi bi-google" style="color:#EA4335"></i> Google
+              </button>
+              <button class="btn-social">
+                <i class="bi bi-github"></i> GitHub
+              </button>
+            </div>
+
+            <p class="form-rodape">
+              Ainda não tem conta? <a href="#" data-trocar-aba="cadastro">Cria uma agora!</a>
+            </p>
+          </div>
+
+          <!-- tela de esqueci senha -->
+          <div id="esqueci-wrap" style="display:none">
+            <h1 class="form-titulo">Esqueceu? 🤔</h1>
+            <p class="form-subtitulo">Sem problema! Coloca seu e-mail que a gente te manda um link pra redefinir.</p>
+
+            <form id="formEsqueci" novalidate>
+              <div class="campo">
+                <label for="email-esqueci">Seu e-mail</label>
+                <div class="input-wrap">
+                  <input type="email" id="email-esqueci" placeholder="seu@email.com" />
+                  <i class="bi bi-envelope icone-input"></i>
+                </div>
+                <div class="msg-erro" id="erro-email-esqueci">Precisamos de um e-mail válido!</div>
+              </div>
+
+              <button type="submit" class="btn-enviar">
+                <span class="texto-btn">Enviar Link 📧</span>
+                <div class="spinner"></div>
+              </button>
+            </form>
+
+            <p class="form-rodape" style="margin-top:16px">
+              <a href="#" id="voltar-login">← Voltar pro login</a>
+            </p>
+          </div>
+
+          <!-- tela de sucesso pos-login -->
+          <div class="tela-sucesso" id="sucesso-login">
+            <div class="icone-sucesso">✅</div>
+            <div class="sucesso-titulo">Entrou! <span>🎉</span></div>
+            <p class="sucesso-msg">Login feito com sucesso!<br>Redirecionando pra home...</p>
+            <a href="index.html" class="btn-enviar" style="text-decoration:none; display:inline-flex; width:auto; padding:13px 28px">
+              <span>Ir pra Home 🏠</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- ===========================
+             PAINEL DE CADASTRO
+        =========================== -->
+        <div class="painel-form" id="painel-cadastro">
+
+          <div id="form-cadastro-wrap">
+            <h1 class="form-titulo">Seja bem-vindo! 🙌</h1>
+            <p class="form-subtitulo">Cria sua conta rapidinho, é de graça!</p>
+
+            <form id="formCadastro" novalidate>
+
+              <!-- nome e sobrenome lado a lado -->
+              <div class="row g-2">
+                <div class="col-6">
+                  <div class="campo" style="margin-bottom:0">
+                    <label for="nome">Nome</label>
+                    <div class="input-wrap">
+                      <input type="text" id="nome" placeholder="Ana" />
+                    </div>
+                    <div class="msg-erro" id="erro-nome">Campo obrigatório!</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="campo" style="margin-bottom:0">
+                    <label for="sobrenome">Sobrenome</label>
+                    <div class="input-wrap">
+                      <input type="text" id="sobrenome" placeholder="Silva" />
+                    </div>
+                    <div class="msg-erro" id="erro-sobrenome">Campo obrigatório!</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="campo">
+                <label for="email-cad">E-mail</label>
+                <div class="input-wrap">
+                  <input type="email" id="email-cad" placeholder="seu@email.com" />
+                  <i class="bi bi-envelope icone-input"></i>
+                </div>
+                <div class="msg-erro" id="erro-email-cad">E-mail inválido!</div>
+              </div>
+
+              <div class="campo">
+                <label for="senha-cad">Senha</label>
+                <div class="input-wrap">
+                  <input type="password" id="senha-cad" placeholder="••••••••" />
+                  <i class="bi bi-eye icone-input" id="toggle-senha-cad"></i>
+                </div>
+                <!-- medidor de forca da senha -->
+                <div class="forca-senha">
+                  <div class="barra-forca">
+                    <div class="fill-forca" id="fill-forca"></div>
+                  </div>
+                  <div class="label-forca" id="label-forca" style="color:var(--texto-fraco)"></div>
+                </div>
+                <div class="msg-erro" id="erro-senha-cad">Senha precisa ter pelo menos 8 caracteres!</div>
+              </div>
+
+              <div class="campo">
+                <label for="conf-senha">Confirmar Senha</label>
+                <div class="input-wrap">
+                  <input type="password" id="conf-senha" placeholder="••••••••" />
+                </div>
+                <div class="msg-erro" id="erro-conf-senha">As senhas não batem!</div>
+              </div>
+
+              <!-- checkbox de termos -->
+              <div class="campo">
+                <label class="check-custom" style="align-items:flex-start">
+                  <input type="checkbox" id="aceitar-termos" />
+                  <div class="check-caixa" style="margin-top:1px"></div>
+                  <span>Li e aceito os <a href="#" style="color:var(--roxo-claro)">Termos de Uso</a> e a <a href="#" style="color:var(--roxo-claro)">Política de Privacidade</a></span>
+                </label>
+                <div class="msg-erro" id="erro-termos">Precisa aceitar os termos!</div>
+              </div>
+
+              <button type="submit" class="btn-enviar">
+                <span class="texto-btn">Criar Conta 🎉</span>
+                <div class="spinner"></div>
+              </button>
+
+            </form>
+
+            <p class="form-rodape">
+              Já tem conta? <a href="#" data-trocar-aba="login">Entra aqui!</a>
+            </p>
+          </div>
+
+          <!-- tela de sucesso pos-cadastro -->
+          <div class="tela-sucesso" id="sucesso-cadastro">
+            <div class="icone-sucesso">🎊</div>
+            <div class="sucesso-titulo">Conta <span>criada!</span></div>
+            <p class="sucesso-msg">Seja bem-vindo(a) à comunidade TechBlog! 🥳<br>Verifique seu e-mail pra ativar sua conta.</p>
+            <a href="index.html" class="btn-enviar" style="text-decoration:none; display:inline-flex; width:auto; padding:13px 28px">
+              <span>Ir pra Home 🏠</span>
+            </a>
+          </div>
+
+        </div>
+        <!-- fim do painel de cadastro -->
+
+      </div>
+      <!-- fim da caixa-form -->
+
+    </div>
+    <!-- fim do lado-direito -->
+
+  </div>
+  <!-- fim da pagina-login -->
+
+  <!-- toast de notificacao -->
+  <div class="toast-pop" id="toast"></div>
+
+  <!-- =====================
+       SCRIPTS
+  ===================== -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    $(function () {
+
+      // === trocar abas (login / cadastro) ===
+      function trocarAba(qual) {
+        $('.aba').removeClass('ativa');
+        $(`.aba[data-aba="${qual}"]`).addClass('ativa');
+        $('.painel-form').removeClass('ativo');
+        $(`#painel-${qual}`).addClass('ativo');
+      }
+
+      $('.aba').on('click', function () {
+        trocarAba($(this).data('aba'));
+      });
+
+      // links que trocam aba
+      $('[data-trocar-aba]').on('click', function (e) {
+        e.preventDefault();
+        trocarAba($(this).data('trocar-aba'));
+      });
+
+      // === mostrar/esconder senha ===
+      function toggleSenha(inputId, iconeEl) {
+        var $input = $('#' + inputId);
+        var $icone = $(iconeEl);
+        if ($input.attr('type') === 'password') {
+          $input.attr('type', 'text');
+          $icone.removeClass('bi-eye').addClass('bi-eye-slash');
+        } else {
+          $input.attr('type', 'password');
+          $icone.removeClass('bi-eye-slash').addClass('bi-eye');
+        }
+      }
+
+      $('#toggle-senha-login').on('click', function () { toggleSenha('senha-login', this); });
+      $('#toggle-senha-cad').on('click', function ()   { toggleSenha('senha-cad', this); });
+
+      // === fluxo de esqueci a senha ===
+      $('#link-esqueci').on('click', function (e) {
+        e.preventDefault();
+        $('#form-login-wrap').hide();
+        $('#esqueci-wrap').show();
+      });
+
+      $('#voltar-login').on('click', function (e) {
+        e.preventDefault();
+        $('#esqueci-wrap').hide();
+        $('#form-login-wrap').show();
+      });
+
+      // === validacoes ===
+      function emailValido(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function mostrarErro(id) { $('#' + id).addClass('mostrar'); }
+      function esconderErro(id) { $('#' + id).removeClass('mostrar'); }
+
+      function marcarCampo($el, ok) {
+        $el.toggleClass('com-erro', !ok).toggleClass('ok', ok);
+      }
+
+      // === medidor de forca da senha ===
+      $('#senha-cad').on('input', function () {
+        var senha = $(this).val();
+        var pontos = 0;
+        if (senha.length >= 8) pontos++;
+        if (/[A-Z]/.test(senha)) pontos++;
+        if (/[0-9]/.test(senha)) pontos++;
+        if (/[^A-Za-z0-9]/.test(senha)) pontos++;
+
+        var cores  = ['', '#ef4444', '#f97316', '#eab308', '#10b981'];
+        var labels = ['', 'Fraca 😬', 'Razoável 😐', 'Boa 😊', 'Forte 💪'];
+        var pct    = [0, 25, 50, 75, 100][pontos];
+
+        $('#fill-forca').css({ width: pct + '%', background: cores[pontos] });
+        $('#label-forca').text(senha ? labels[pontos] : '').css('color', cores[pontos]);
+      });
+
+      // === submit do login ===
+      $('#formLogin').on('submit', function (e) {
+        e.preventDefault();
+        var ok = true;
+
+        var email = $('#email-login').val().trim();
+        var senha = $('#senha-login').val();
+
+        if (!emailValido(email)) {
+          mostrarErro('erro-email-login');
+          marcarCampo($('#email-login'), false);
+          ok = false;
+        } else {
+          esconderErro('erro-email-login');
+          marcarCampo($('#email-login'), true);
+        }
+
+        if (!senha) {
+          mostrarErro('erro-senha-login');
+          marcarCampo($('#senha-login'), false);
+          ok = false;
+        } else {
+          esconderErro('erro-senha-login');
+          marcarCampo($('#senha-login'), true);
+        }
+
+        if (!ok) return;
+
+        // simula um carregamento de 2 segundos
+        var $btn = $(this).find('.btn-enviar');
+        $btn.addClass('carregando');
+
+        setTimeout(function () {
+          $btn.removeClass('carregando');
+          $('#form-login-wrap').hide();
+          $('#sucesso-login').addClass('mostrar');
+        }, 2000);
+      });
+
+      // === submit do esqueci a senha ===
+      $('#formEsqueci').on('submit', function (e) {
+        e.preventDefault();
+        var email = $('#email-esqueci').val().trim();
+
+        if (!emailValido(email)) {
+          mostrarErro('erro-email-esqueci');
+          marcarCampo($('#email-esqueci'), false);
+          return;
+        }
+
+        esconderErro('erro-email-esqueci');
+        var $btn = $(this).find('.btn-enviar');
+        $btn.addClass('carregando');
+
+        setTimeout(function () {
+          $btn.removeClass('carregando');
+          $('#esqueci-wrap').html(`
+            <div style="text-align:center; padding:20px 0">
+              <div style="font-size:3rem; margin-bottom:16px">📬</div>
+              <h2 class="form-titulo">E-mail enviado!</h2>
+              <p class="form-subtitulo">Confere sua caixa de entrada e clica no link que mandamos.</p>
+              <a href="#" id="voltar-login-2" style="color:var(--roxo-claro); font-weight:700; font-size:0.82rem">
+                ← Voltar pro login
+              </a>
+            </div>
+          `);
+
+          $('#voltar-login-2').on('click', function (e) {
+            e.preventDefault();
+            $('#esqueci-wrap').hide();
+            $('#form-login-wrap').show();
+          });
+        }, 1800);
+      });
+
+      // === submit do cadastro ===
+      $('#formCadastro').on('submit', function (e) {
+        e.preventDefault();
+        var ok = true;
+
+        var nome     = $('#nome').val().trim();
+        var sobre    = $('#sobrenome').val().trim();
+        var email    = $('#email-cad').val().trim();
+        var senha    = $('#senha-cad').val();
+        var conf     = $('#conf-senha').val();
+        var termos   = $('#aceitar-termos').is(':checked');
+
+        if (!nome)  { mostrarErro('erro-nome');     marcarCampo($('#nome'), false);     ok = false; }
+        else        { esconderErro('erro-nome');    marcarCampo($('#nome'), true); }
+
+        if (!sobre) { mostrarErro('erro-sobrenome'); marcarCampo($('#sobrenome'), false); ok = false; }
+        else        { esconderErro('erro-sobrenome'); marcarCampo($('#sobrenome'), true); }
+
+        if (!emailValido(email)) { mostrarErro('erro-email-cad'); marcarCampo($('#email-cad'), false); ok = false; }
+        else                     { esconderErro('erro-email-cad'); marcarCampo($('#email-cad'), true); }
+
+        if (senha.length < 8) { mostrarErro('erro-senha-cad'); marcarCampo($('#senha-cad'), false); ok = false; }
+        else                  { esconderErro('erro-senha-cad'); marcarCampo($('#senha-cad'), true); }
+
+        if (senha !== conf || !conf) { mostrarErro('erro-conf-senha'); marcarCampo($('#conf-senha'), false); ok = false; }
+        else                         { esconderErro('erro-conf-senha'); marcarCampo($('#conf-senha'), true); }
+
+        if (!termos) { mostrarErro('erro-termos'); ok = false; }
+        else         { esconderErro('erro-termos'); }
+
+        if (!ok) return;
+
+        var $btn = $(this).find('.btn-enviar');
+        $btn.addClass('carregando');
+
+        setTimeout(function () {
+          $btn.removeClass('carregando');
+          $('#form-cadastro-wrap').hide();
+          $('#sucesso-cadastro').addClass('mostrar');
+        }, 2200);
+      });
+
+      // === validacao em tempo real no email do login ===
+      $('#email-login').on('blur', function () {
+        var v = $(this).val().trim();
+        if (v) {
+          if (emailValido(v)) esconderErro('erro-email-login');
+          else mostrarErro('erro-email-login');
+        }
+      });
+
+      // === toast ===
+      var timerToast;
+      function mostrarToast(msg) {
+        clearTimeout(timerToast);
+        $('#toast').text(msg).addClass('visivel');
+        timerToast = setTimeout(function () {
+          $('#toast').removeClass('visivel');
+        }, 3000);
+      }
+
+      // feedback nos botoes de social
+      $('.btn-social').on('click', function () {
+        var nome = $(this).text().trim();
+        mostrarToast('Redirecionando para ' + nome + '...');
+      });
+
+    }); // fim do $(function)
+  </script>
+
+</body>
+</html>
